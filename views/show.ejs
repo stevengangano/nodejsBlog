@@ -1,0 +1,86 @@
+<% include partials/header %>
+
+<div class="container">
+	<div class='row text-center'>	
+		<div class="thumbnail">
+			<h4 class='title text-center'> <%=myblog.title %> </h4>
+			<img src="<%= myblog.image %>" alt='' >
+			<p> <%=myblog.body %> </p>
+			<p> Blog Created by: <%=myblog.author.username%> </p>
+			
+
+		
+<!-- Comment Modal -->
+
+  <div class="container">
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-success btn-xs text-center" data-toggle="modal" data-target="#myModal">Add a comment</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Leave a comment</h4>
+        </div>
+        <div class="modal-body">
+         <div class='text-center'>
+
+  <!-- Comment form -->
+
+		<form action='/blog/<%=myblog.id%>/comments' method='Post'> <!-- posting to index page -->
+			<!-- 	<div class='field'>
+					<label> User </label><br>
+					<input type='text' name='comment[author]' placeholder='author'> <! "[]" must match Schema -->
+				<!-- </div>  -->
+				<div class='field'>
+					<label> Text </label> <br>
+					<input type='text' name='comment[text]' placeholder='text'> 
+				</div>
+				<button class='btn btn-primary'> Submit </button>
+		</form>
+
+		<!-- Comment form end -->
+
+  </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+<!-- End Modal -->
+
+<!-- Delete Blog -->
+		<form action='/blog/<%= myblog._id%>/edit' method="Get">
+			<button class='btn btn-primary btn-xs'> Edit Blog</button>
+		</form>
+
+		<form action='/blog/<%= myblog._id%>?_method=DELETE' method='Post'>
+			<button class='btn btn-danger btn-xs'> Delete Blog </button>
+		</form>
+
+
+		</div>	
+	</div>
+</div>
+
+<div>
+
+
+<h3 class='purple'> Comments: </h3>
+<% myblog.comments.forEach(function(comment){ %> <!-- myblog = data, comments is from  blogSchema -->
+	<div>
+	   <h6 class='green'>User: <%= comment.author.username %> </h6> 
+	   <h6 class='green'> <%= comment.text %> </h6>
+	</div>        
+<% }) %>
+<div>
+</div>

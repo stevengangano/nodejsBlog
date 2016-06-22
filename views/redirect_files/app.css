@@ -1,0 +1,50 @@
+@impo
+rt url(https://fonts.googleapis.com/css?family=Merriweather+Sans:800);
+
+@impo
+rt url(https://fonts.googleapis.com/css?family=Merriweather+Sans:800);
+
+@import url(https://fonts.googleapis.com/css?family=Merriweather:400,900);
+.title {
+	font-family: 'Merriweather Sans', sans-serif;
+	font-size: 30px;
+	color: green;
+}
+
+body  {
+    background-image: url("https://static.pexels.com/photos/65133/pexels-photo-65133-large.jpeg");
+    background-color: #cccccc;
+    background-size: cover;
+	background-position: center;
+}
+
+html {
+	height: 100%;
+}
+
+	
+}
+
+hr {
+	width: 400px;
+	border-top: solid 1px color;
+	border-bottom: solid 1px color;
+}
+
+#content {
+	text-align: center;
+	padding-top: 20%;
+	text-shadow: 0px 4px 3px white,
+		     	 0px 8px 13px white,
+                 0px 18px 23px white;
+}
+
+.panel-default>.panel-heading {
+	font-family: 'Merriweather', serif;
+	color: #001a00;
+;
+}
+
+
+
+

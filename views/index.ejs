@@ -1,0 +1,20 @@
+<% include partials/header %>
+
+
+<div class='container'>
+	<div class="row">
+		<% myblogs.forEach(function(blogs) { %>	
+ 		 <div class="col-lg-4">
+     		 <div class='thumbnail text-center'>
+      				<h4 class='text-center'> <%= blogs.title %> </h4>
+      				<img src="<%= blogs.image %>" alt='' >	      
+		      		<a href="/blog/<%= blogs._id%>"> Read Blog </a>
+      		</div>
+      		
+	 	 </div>
+	 	 <% }); %>
+	</div>
+</div>
+
+
+</body>
