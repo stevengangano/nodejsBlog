@@ -5,7 +5,7 @@
 <h4> Edit Blog </h4>
 
 <!-- this will post to the show page -->
-<form action='/blog/<%= blogEdit._id%>?_method=PUT' method='Post'> <!-- <%= blogEdit._id%> is taken from app.js "Edit Route". Method Post is used it will only work if method-overide is used. Method override will convert _method from Post to Put. In order for method override to work, you must install "npm install method-override --save" -->
+<form action='/blog/<%= ablog %>?_method=PUT' method='Post'> <!-- <%= blogEdit._id%> is taken from app.js "Edit Route". Method Post is used it will only work if method-overide is used. Method override will convert _method from Post to Put. In order for method override to work, you must install "npm install method-override --save" -->
 
 	<input type='text' name='blog[title]' value="<%= blogEdit.title %>" placeholder='blog name'> <br> <!-- "[]" must match Schema -->
 	<input type='text' name='blog[image]' value="<%= blogEdit.image %>" placeholder='img url'> <br>
@@ -15,3 +15,5 @@
 </form>
 
 </div>
+
+

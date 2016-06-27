@@ -58,7 +58,8 @@
 
 <!-- End Modal -->
 
-<!-- Delete Blog -->
+<!-- Edit and Delete Blog -->
+		<% if(currentUser && myblog.author.id.equals(currentUser._id)) { %> <!-- if logged in, and author ID is equal to user, then show, then show edit and delete button -->
 		<form action='/blog/<%= myblog._id%>/edit' method="Get">
 			<button class='btn btn-primary btn-xs'> Edit Blog</button>
 		</form>
@@ -67,19 +68,31 @@
 			<button class='btn btn-danger btn-xs'> Delete Blog </button>
 		</form>
 
-
+		<% } %>
 		</div>	
 	</div>
 </div>
 
 <div>
 
+<!-- Adding a comment -->
 
 <h3 class='purple'> Comments: </h3>
 <% myblog.comments.forEach(function(comment){ %> <!-- myblog = data, comments is from  blogSchema -->
 	<div>
 	   <h6 class='green'>User: <%= comment.author.username %> </h6> 
+
 	   <h6 class='green'> <%= comment.text %> </h6>
+
+	   <% if(currentUser && myblog.author.id.equals(currentUser._id)) { %> <!-- if logged in, and author ID is equal to user, then show, then show edit and delete button -->
+	   <!-- Edit a comment -->
+	   <a class='btn btn-xs btn-warning' href='/blog/<%= myblog._id %>/comments/<%= comment._id%>/edit'> Edit </a>
+	   <!-- Delete a comment -->
+	   <form action='/blog/<%= myblog.id %>/comments/<%= comment._id %>?_method=DELETE' method='post'> 
+	   		<input type='submit' class='btn btn-xs btn-danger' value='Delete'>
+	   	</form>
+
+	   	<% } %>
 	</div>        
 <% }) %>
 <div>

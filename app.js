@@ -43,6 +43,49 @@ app.use(function(req, res, next) { // this makes this available on every route
 	next();
 });
 
+//middleware
+function checkCampgroundOwnership(req, res, next){
+	// is User logged in?
+	if (req.isAuthenticated){
+				//if yes, then...
+				Blog.findById(req.params.id, function(err, editblog) { // finds all Blogs in database
+					if(err){
+						res.direct('back');
+					} else {
+						// does the user own the blog? If yes....
+						if (editblog.author.id.equals(req.user._id)) {
+						next();
+					} else {
+						// If no....
+						res.send('You do not have permission to do that')
+					}
+
+					}
+			});
+		}
+}
+
+//middleware to check comment ownership
+function checkCommentOwnership(req, res, next){
+	// is User logged in?
+	if (req.isAuthenticated){
+				//if yes, then...
+				Comment.findById(req.params.comment_id, function(err, editblog) { // finds all Blogs in database
+					if(err){
+						res.direct('back');
+					} else {
+						// does the user own the blog? If yes....
+						if (editblog.author.id.equals(req.user._id)) {
+						next();
+					} else {
+						// If no....
+						res.send('You do not have permission to do that')
+					}
+
+					}
+			});
+		}
+}
 
 // Routes
 
@@ -53,30 +96,31 @@ app.get('/', function(req, res){
 
 //1) Index Page
 app.get('/blog', isLoggedIn, function(req,res) {
-		Blog.find({}, function(err, oneblog) { // finds all campgrounds(title,image,body) in "Blog" database
+		Blog.find({}, function(err, oneblog) { // finds all campgrounds(title,image,body) in "Blog"
 			if(err){
 				console.log(err);
 			} else {
-				res.render("index", {myblogs: oneblog});
+				res.render("index", {myblogs: oneblog}); //oneblog =  { title: '', body: '', image: ''} for each blog
 			}
 	});
 });
 
-// 2) NEW: form for adding a new campground
+// 2) NEW: form for adding a new blog
 app.get("/blog/new", isLoggedIn, function(req, res) {
 	res.render("new")
 })
 
-//3) CREATE: Posts a new campground.
+//3) CREATE: Posting a new blog
 app.post("/blog", isLoggedIn, function(req, res) {
-	var title = req.body.title
+	var title = req.body.title 
 	var body = req.body.body
 	var image = req.body.image
+
 	var author = {
 		id: req.user._id,
 		username: req.user.username
 	}
-	var newBlog = {title: title, body: body, image: image, author: author} //author is linked to show.ejs
+	var newBlog = {title: title, body: body, image: image, author: author} 
 	Blog.create(newBlog,  function(err, newBlogAdded){ // var title, body, image have to match "name" attribute on new.ejs
 		if(err){
 			console.log(err)
@@ -90,51 +134,58 @@ app.post("/blog", isLoggedIn, function(req, res) {
 	})
 });
 
-//4) Show: With comments
+//4) Show page (displaying blog on show page)
 app.get("/blog/:id", isLoggedIn, function(req, res) {
 	//find the campground with provided ID
-	Blog.findById(req.params.id).populate("comments").exec(function(err, oneblog) { // show page now populates comments
+	Blog.findById(req.params.id).populate("comments").exec(function(err, oneblog) { // this populates comments on show page
 		if(err){
 			console.log(err);
 		} else {
 			//render show template with that campground
-			res.render("show", {myblog: oneblog});
+			res.render("show", {myblog: oneblog}); // used to display  title, image, body, author from BlogSchema
 			console.log(oneblog) // shows comments with campground info
 		}
 	}); 
 })
 
-//5) Edit Route (this is set up ) without authorization
-app.get("/blog/:id/edit", isLoggedIn,  function(req, res){
-		Blog.findById(req.params.id, function(err, editblog) { // finds all campgrounds in database
-			if(err){
-				console.log(err);
-			} else {
-				res.render("edit", {blogEdit: editblog});
-			}
-	});
-});
-
-// //5) Edit Route (this is set up ) with authorization
-// app.get("/blog/:id/edit", function(req, res){
-// 		// is user logged in?
-// 		if(req.isAuthenticated()) {
-// 			Blog.findById(req.params.id, function(err, editblog) { 
+// //5a) Edit Route (this is set up ) without authorization
+// app.get("/blog/:id/edit", isLoggedIn,  function(req, res){
+// 		Blog.findById(req.params.id, function(err, editblog) { // finds all campgrounds in database
 // 			if(err){
 // 				console.log(err);
 // 			} else {
-// 		// does user own the campground?
-// 		(if )
-// 				res.render("edit", {blogEdit: editblog}); // show edit page
+// 				res.render("edit", {blogEdit: editblog});
 // 			}
 // 	});
-// 		} else {
-// 			res.send("you need to be logged") 
-// 		}		
 // });
 
+// //5b) Authorization to edit a route
+app.get("/blog/:id/edit", function(req, res){
+			//is user logged in?
+			if (req.isAuthenticated){
+				//if yes, then...
+				Blog.findById(req.params.id, function(err, editblog) { // finds all campgrounds in database
+					if(err){
+						console.log(err);
+					} else {
+						// does the user own the blog? If yes....
+						if (editblog.author.id.equals(req.user._id)) {
+						res.render("edit", {blogEdit: editblog, ablog: req.params.id});
+					} else {
+						// If no....
+						res.send('You do not have permission to do that')
+					}
+
+					}
+			});
+		}
+		
+});
+
+
+
 //6) Update route
-app.put('/blog/:id', isLoggedIn, function(req, res){
+app.put('/blog/:id', checkCampgroundOwnership, function(req, res){
 	Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, UpdatedBlog){ // takes (id, newData, callback)
 		if(err){
 				res.redirect("/blog");
@@ -145,7 +196,7 @@ app.put('/blog/:id', isLoggedIn, function(req, res){
 });
 
 //7) Delete route
-app.delete("/blog/:id", function (req, res){
+app.delete("/blog/:id", checkCampgroundOwnership, function (req, res){
 	//destroy blog
 	Blog.findByIdAndRemove(req.params.id, function(err){
 		if(err){
@@ -198,6 +249,43 @@ app.post("/blog/:id/comments", isLoggedIn, function(req, res){
 });
 
 
+// Editing a comment (edits a comment on the comment edit form)
+app.get('/blog/:id/comments/:comment_id/edit', checkCommentOwnership, function (req, res){
+	Comment.findById(req.params.comment_id,  function(err, foundComment){
+		if(err){
+			res.send('back')
+		} else {
+			res.render('commentsedit', {blog_id: req.params.id, comment: foundComment})
+		}
+	});
+});
+
+//comment update (this updates the edited comment)
+app.put('/blog/:id/comments/:comment_id',  function(req, res){
+	Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
+		if (err) {
+			res.send('error')
+		} else {
+			res.redirect('/blog/' + req.params.id);
+		}
+	})
+	
+});
+
+//Comment Delete (this delete the comment)
+app.delete('/blog/:id/comments/:comment_id', checkCommentOwnership, function(req, res){
+		//findById and Remove
+		Comment.findByIdAndRemove(req.params.comment_id, function (err){
+			if(err){
+				res.send('error')
+			} else {
+				res.redirect('/blog/' + req.params.id);
+			}
+		})
+	});
+
+
+
 //Authentication
 
 //Register a new User
@@ -220,6 +308,8 @@ app.post('/register', function(req, res){
 	});
 });
 
+
+
 //login form
 app.get('/login', function(req,res) {
 	res.render('login');
@@ -229,7 +319,7 @@ app.get('/login', function(req,res) {
 //middleware is used for passport.authenticate
 app.post('/login', passport.authenticate("local", { //passport authenticate checks if req.body.username = req.body.password. if successful, redirect to /secret.
 	successRedirect: "/blog",
-	failureRedirect: "/login"	
+	failureRedirect: "/unauthenticated"	
 }));
 
 
