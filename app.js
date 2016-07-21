@@ -14,7 +14,7 @@ var express = require('express'),
 
 
 // App config
-mongoose.connect("mongodb://localhost/passport_app");
+mongoose.connect("mongodb://localhost/blog_app");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.use(methodOverride("_method"));
