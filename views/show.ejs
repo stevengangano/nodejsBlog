@@ -37,8 +37,7 @@
 					<input type='text' name='comment[author]' placeholder='author'> <! "[]" must match Schema -->
 				<!-- </div>  -->
 				<div class='field'>
-					<label> Text </label> <br>
-					<input type='text' name='comment[text]' placeholder='text'> 
+					<input type='text' name='comment[text]'> 
 				</div>
 				<button class='btn btn-primary'> Submit </button>
 		</form>
@@ -59,7 +58,7 @@
 <!-- End Modal -->
 
 <!-- Edit and Delete Blog -->
-		<% if(currentUser && myblog.author.id.equals(currentUser._id)) { %> <!-- if logged in, and author ID is equal to user, then show, then show edit and delete button -->
+		<% if(currentUser && myblog.author.id.equals(currentUser._id)) { %> <!-- if logged in, and blog author ID is equal to user, then show, then show edit and delete button -->
 		<form action='/blog/<%= myblog._id%>/edit' method="Get">
 			<button class='btn btn-primary btn-xs'> Edit Blog</button>
 		</form>
@@ -84,7 +83,7 @@
 
 	   <h6 class='green'> <%= comment.text %> </h6>
 
-	   <% if(currentUser && myblog.author.id.equals(currentUser._id)) { %> <!-- if logged in, and author ID is equal to user, then show, then show edit and delete button -->
+	   <% if(currentUser && comment.author.id.equals(currentUser._id)) { %> <!-- if logged in, and comment author ID is equal to user, then show edit and delete button -->
 	   <!-- Edit a comment -->
 	   <a class='btn btn-xs btn-warning' href='/blog/<%= myblog._id %>/comments/<%= comment._id%>/edit'> Edit </a>
 	   <!-- Delete a comment -->
