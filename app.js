@@ -10,6 +10,13 @@ var express = require('express'),
 	User = require ('./models/user')
 	Comment = require ('./models/comment')
 
+	http = require ('http')
+
+var server = http.createServer(function (
+	req, res){
+	res.writeHead(200)
+});
+
 // App config
 mongoose.connect("mongodb://localhost/passport_app");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -341,6 +348,6 @@ app.get('/unauthenticated', function(req,res) {
 
 var port = Number(process.env.PORT || 9000)
 
-app.listen(port, function(){
+server.listen(port, function(){
 	console.log("Passport is running")
 });
