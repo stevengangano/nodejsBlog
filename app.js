@@ -347,6 +347,6 @@ app.get('/unauthenticated', function(req,res) {
 
 var port = Number(process.env.PORT || 9000)
 
-server.listen(port, function(){
+app.listen(port, function(){
 	console.log("Passport is running")
 });
