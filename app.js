@@ -342,8 +342,8 @@ app.get('/unauthenticated', function(req,res) {
 	res.render('unauthenticated')
 });
 
-var port = Number(process.env.PORT || 9000)
+var port = Number()
 
-http.listen(port, function(){
+http.listen(process.env.PORT || 9000, function(){
   console.log('listening on', http.address().port);
 });
