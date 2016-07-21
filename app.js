@@ -10,12 +10,11 @@ var express = require('express'),
 	User = require ('./models/user')
 	Comment = require ('./models/comment')
 
-	http = require ('http')
+	var http = require('http')
 
-var server = http.createServer(function (
-	req, res){
-	res.writeHead(200)
-});
+	var server = http.createServer(function (req, res){
+		res.writeHead(200)
+	});
 
 // App config
 mongoose.connect("mongodb://localhost/passport_app");
