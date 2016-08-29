@@ -342,7 +342,7 @@ app.get('/unauthenticated', function(req,res) {
 	res.render('unauthenticated')
 });
 
-app.listen(PORT, function(){
+app.listen(PORT, process.env.IP, function(){
   console.log('Server Running');
 });
 
