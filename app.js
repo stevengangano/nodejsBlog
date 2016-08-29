@@ -11,7 +11,7 @@ var express = require('express'),
 	Comment = require ('./models/comment')
 
 	var http = require('http').Server(app);
-
+var PORT = process.env.PORT || 3000
 
 // App config
 mongoose.connect("mongodb://localhost/blog_app");
@@ -342,8 +342,7 @@ app.get('/unauthenticated', function(req,res) {
 	res.render('unauthenticated')
 });
 
-var port = Number()
-
-http.listen(process.env.PORT || 9000, function(){
-  console.log('listening on', http.address().port);
+app.listen(PORT, function(){
+  console.log('Server Running');
 });
+
